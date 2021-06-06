@@ -1,0 +1,59 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8" content="">
+    <title>JSONテスト</title>
+    <script src="js/jquery-3.6.0.min.js"></script>
+    <script type="text/javascript">
+    </script>
+</head>
+
+<body>
+    <h1>JSON2-3（Javascript⇒PHP➡Javascript）</h1>
+    ID<input type="text" id="ID" name="ID" value="98765"><br>
+    氏名<input type="text" id="name" name="name" value="春の太郎"><br>
+    性別<input type="text" id="gender" name="gender" value="man"><br>
+    <br><button id="button">ボタン</button><br><br>
+    JSで作成した連想配列をJson化（JSON.stringify）:<br>
+    <div id="output1"></div>
+    <hr>
+    PHPから受信した値を出力:<br>
+    <div id="output2"></div>
+    <hr>
+    PHPから受信した値をParse（JSON.parse）した値:<br>
+    <div id="output3"></div><br>
+    <script type="text/javascript">
+        $('#button').on('click', function () {
+            var array = {};
+            
+            array['ID'] = $('#ID').val();
+            array['name'] = $('#name').val();
+            array['gender'] = $('#gender').val();
+            var result = JSON.stringify(array);
+            console.log("clicked");
+            $("#output1").append(result);
+            send_ajax(result);
+        });
+
+        function send_ajax(result) {
+            $.ajax({
+                type: "POST",
+                url: "json2-3.php",
+                data: result
+            })
+                .done(function (msg) {
+                    alert(msg);
+                    $("#output2").append(msg);
+                    var get_json = JSON.parse(msg);
+                    for (var key in get_json) {
+                        $("#output3").append("キー：" + key + "　");
+                        $("#output3").append("値：" + get_json[key] + "<br />");
+                        console.log(key);
+                    }
+                });
+        }
+    </script>
+</body>
+
+</html>
